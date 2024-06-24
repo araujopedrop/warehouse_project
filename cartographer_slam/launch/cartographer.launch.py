@@ -5,8 +5,13 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    cartographer_config_dir = os.path.join(get_package_share_directory('cartographer_slam'), 'config')
+    package_description = 'cartographer_slam'
+
+    cartographer_config_dir = os.path.join(get_package_share_directory(package_description), 'config')
     configuration_basename = 'cartographer.lua'
+
+    # RVIZ Configuration
+    rviz_config_dir = os.path.join(get_package_share_directory(package_description), "config", 'mapper_rviz_config.rviz')
 
     return LaunchDescription([
         
@@ -27,5 +32,14 @@ def generate_launch_description():
             parameters=[{'use_sim_time': True}],
             arguments=['-resolution', '0.05', '-publish_period_sec', '1.0']
         ),
+
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            output='screen',
+            name='rviz_node',
+            parameters=[{'use_sim_time': True}],
+            arguments=['-d', rviz_config_dir]),
+
         
     ]) 

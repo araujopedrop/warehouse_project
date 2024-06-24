@@ -1,4 +1,4 @@
-image: RB1_area.pgm
+image: warehouse_map_sim.pgm
 mode: trinary
 resolution: 0.05
 origin: [-1.12, -4.48, 0]
