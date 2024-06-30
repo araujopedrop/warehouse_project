@@ -10,7 +10,6 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     
     nav2_yaml = os.path.join(get_package_share_directory('localization_server'), 'config', 'amcl_config.yaml')
-    rviz_config_dir = os.path.join(get_package_share_directory("localization_server"), "config", 'localizer_rviz_config.rviz')
 
     map_file_default = "warehouse_map_sim.yaml"
 
@@ -19,7 +18,7 @@ def generate_launch_description():
     )
 
     # Define the base directory
-    base_dir = os.path.join(get_package_share_directory('localization_server'), "config")
+    base_dir = os.path.join(get_package_share_directory('map_server'), "config")
 
     # Concatenate the base directory with the file name
     map_file_path = PathJoinSubstitution([
@@ -55,14 +54,6 @@ def generate_launch_description():
             parameters=[{'use_sim_time': True},
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]),
-
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            output='screen',
-            name='rviz_node',
-            parameters=[{'use_sim_time': True}],
-            arguments=['-d', rviz_config_dir]),
 
         map_file_arg,            
         ])
