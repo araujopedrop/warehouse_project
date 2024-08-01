@@ -28,31 +28,48 @@ def generate_launch_description():
         LaunchConfiguration('map_file')
     ])
 
-    rviz_config_dir = os.path.join(get_package_share_directory("localization_server"), 'config', 'localizer_rviz_config.rviz')
+    use_sim_time_arg = DeclareLaunchArgument(
+        "use_sim_time", default_value="False"
+    )
+
+    use_sim_time_value = LaunchConfiguration('use_sim_time')
+
+    # See if I will use sim o real robot
+    # Not only use_sim_time parameters I hae to chance, also odom_frame_id
+    def compare_arg(context):
+        use_sim_time_value_ = use_sim_time_value.perform(context)
+
+        if use_sim_time_value_ == "True":
+            # Sim robot
+            amcl_node = Node(
+                    package='nav2_amcl',
+                    executable='amcl',
+                    name='amcl',
+                    output='screen',
+                    parameters=[nav2_yaml, {'use_sim_time': use_sim_time_value}, {'odom_frame_id': "odom"}]
+                )
+        else:
+            # Real robot
+            amcl_node = Node(
+                    package='nav2_amcl',
+                    executable='amcl',
+                    name='amcl',
+                    output='screen',
+                    parameters=[nav2_yaml, {'use_sim_time': use_sim_time_value}, {'odom_frame_id': "robot_odom"}]
+                )
+
+        return [amcl_node]
+
+    compare_action = OpaqueFunction(function=compare_arg)
+
 
     return LaunchDescription([
-
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='static_transform_publisher_base_link',
-            output='screen',
-            emulate_tty=True,
-            arguments=['0', '0', '0', '0', '0', '0', 'robot_base_link', 'base_link']),
-
-        Node(
-            package='nav2_amcl',
-            executable='amcl',
-            name='amcl',
-            output='screen',
-            parameters=[nav2_yaml]),
-
         Node(
             package='nav2_map_server',
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': True}, 
+            parameters=[{'use_sim_time': use_sim_time_parameter}, 
                         {'yaml_filename':map_file_path} 
                        ]),
 
@@ -66,4 +83,6 @@ def generate_launch_description():
                         {'node_names': ['map_server','amcl']}]),
 
         map_file_arg,
+        use_sim_time_arg,
+        compare_action,            
         ])

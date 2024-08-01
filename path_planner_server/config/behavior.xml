@@ -2,7 +2,7 @@
   This Behavior Tree replans the global path periodically at 1 Hz, and has
   recovery actions. Obtained from the official Nav2 package
 -->
-<root main_tree_to_execute="MainTree">
+<root main_tree_to_execute="MainTree" tick_rate="150.00">
   <BehaviorTree ID="MainTree">
     <RecoveryNode number_of_retries="6" name="NavigateRecovery">
       <PipelineSequence name="NavigateWithReplanning">

@@ -24,18 +24,18 @@ amcl:
     max_beams: 60
     max_particles: 8000
     min_particles: 200
-    odom_frame_id: "robot_odom"
+    odom_frame_id: "odom"
     pf_err: 0.05
     pf_z: 0.99
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 1
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    set_initial_pose: true
     save_pose_rate: 0.5
+    set_initial_pose: true
     sigma_hit: 0.2
     tf_broadcast: true
-    transform_tolerance: 1.0
+    transform_tolerance: 5.0
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5
